@@ -1,3 +1,21 @@
 "use client";
-import { FormEvent,useState } from "react";
-type Outfit={id:string;name:string;description:string|null;occasion:string|null};type Item={id:string;name:string;category:string};export function OutfitClient({initialOutfits,items}:{initialOutfits:Outfit[];items:Item[]}){const [outfits,setOutfits]=useState(initialOutfits);const [msg,setMsg]=useState("");const [busy,setBusy]=useState(false);async function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();setBusy(true);setMsg("");const form=e.currentTarget;const fd=new FormData(form);const body={name:fd.get("name"),description:fd.get("description"),occasion:fd.get("occasion"),itemIds:fd.getAll("itemIds"),isPublic:false};try{const r=await fetch("/api/outfits",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});const j=await r.json();if(!r.ok)throw new Error(**"Save failed");setOutfits([j.outfit,...outfits]);form.reset();setMsg("Outfit saved.");}catch(e){setMsg(e instanceof Error?e.message:"Save failed")}finally{setBusy(false)}}return <><form className="content-card" onSubmit={submit}><h2 className="serif">Create an outfit</h2><input className="field" name="name" placeholder="Look name" required/><input className="field" name="occasion" placeholder="Occasion"/><textarea className="field" name="description" placeholder="Describe your look"/><p>Select pieces from your closet</p>{items.map(i=><label key={i.id}><input type="checkbox" name="itemIds" value={i.id}/>{i.name}</label>)}<button className="pill" disabled={busy}>Save outfit</button>{msg&&<p>{msg}</p>}</form><section className="tiles">{outfits.map(o =><article className="tile" key={o.id}><h3>{o.name}</h3><p>{o.description}</p></article>)}</section></>;}
+import { FormEvent, useState } from "react";
+type Outfit = { id: string; name: string; description: string | null; occasion: string | null };
+type Item = { id: string; name: string; category: string };
+export function OutfitClient({ initialOutfits, items }: { initialOutfits: Outfit[]; items: Item[] }) {
+  const [outfits, setOutfits] = useState(initialOutfits);
+  const [msg, setMsg] = useState("");
+  const [busy, setBusy] = useState(false);
+  async function submit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault(); setBusy(true); setMsg("");
+    const form = e.currentTarget; const fd = new FormData(form);
+    const body = { name: fd.get("name"), description: fd.get("description"), occasion: fd.get("occasion"), itemIds: fd.getAll("itemIds"), isPublic: false };
+    try {
+      const r = await fetch("/api/outfits", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      const j = await r.json(); if (!r.ok) throw new Error(j.error || "Unable to save outfit.");
+      setOutfits([j.outfit, ...outfits]); form.reset(); setMsg("Outfit saved.");
+    } catch (e) { setMsg(e instanceof Error ? e.message : "Unable to save outfit."); }
+    finally { setBusy(false); }
+  }
+  return <><form className="content-card" onSubmit={submit}><h2 className="serif">Create an outfit</h2><input className="field" name="name" placeholder="Look name" required /><input className="field" name="occasion" placeholder="Occasion" /><textarea className="field" name="description" placeholder="Describe your look" /><p>Select pieces from your closet</p>{items.map(i => <label key={i.id}><input type="checkbox" name="itemIds" value={i.id} /> {i.name} <span>{i.category}</span></label>)}<button className="pill" disabled={busy}>{busy ? "Saving…" : "Save outfit"}</button>{msg && <p role="status">{msg}</p>}</form><section className="tiles">{outfits.map(o => <article className="tile" key={o.id}><h3>{o.name}</h3><p>{o.description}</p></article>)}</section></>;
+}
