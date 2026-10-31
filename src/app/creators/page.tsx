@@ -2,9 +2,18 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { CreatorFollow } from "@/components/social/CreatorFollow";
 
+export const dynamic = "force-dynamic";
+
 export default async function CreatorsPage() {
-  const supabase = await createClient();
-  const { data } = await supabase.from("profiles").select("id,username,display_name,bio,avatar_url").eq("is_creator", true).limit(30);
+  const hasSupabase = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  let data: { id: string; username: string; display_name: string | null; bio: string | null; avatar_url: string | null }[] = [];
+  if (hasSupabase) {
+    try {
+      const supabase = await createClient();
+      const result = await supabase.from("profiles").select("id,username,display_name,bio,avatar_url").eq("is_creator", true).limit(30);
+      data = result.data || [];
+    } catch { data = []; }
+  }
   return <main className="site-shell">
     <header className="nav"><Link className="brand" href="/">closet<span>cloud</span>™</Link><Link className="pill secondary" href="/sign-in">Join the community</Link></header>
     <section className="section">
