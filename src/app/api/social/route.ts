@@ -3,8 +3,10 @@ import { z } from "zod";
 import { requireUser } from "@/lib/auth";
 
 const actionSchema = z.discriminatedUnion("action", [
-  z.object({ action: z.enum(["follow", "unfollow"]), creatorId: z.string().uuid() }),
-  z.object({ action: z.enum(["like", "unlike"]), outfitId: z.string().uuid() }),
+  z.object({ action: z.literal("follow"), creatorId: z.string().uuid() }),
+  z.object({ action: z.literal("unfollow"), creatorId: z.string().uuid() }),
+  z.object({ action: z.literal("like"), outfitId: z.string().uuid() }),
+  z.object({ action: z.literal("unlike"), outfitId: z.string().uuid() }),
   z.object({ action: z.literal("comment"), outfitId: z.string().uuid(), body: z.string().trim().min(1).max(1000) })
 ]);
 
@@ -14,9 +16,14 @@ export async function GET(request: Request) {
   const outfitId = url.searchParams.get("outfitId");
   const creatorId = url.searchParams.get("creatorId");
   const followerCountFor = url.searchParams.get("followerCountFor");
-  if (!user && !followerCountFor) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  // Follower counts are public; personal like/follow state and comments require a session.
+  if ((outfitId || creatorId) && !user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const result: Record<string, unknown> = {};
-  if (outfitId) {
+  if (outfitId && user) {
     const { count: likeCount, error: countError } = await supabase.from("post_likes").select("*", { count: "exact", head: true }).eq("outfit_id", outfitId);
     const { data: liked, error: likedError } = await supabase.from("post_likes").select("outfit_id").eq("outfit_id", outfitId).eq("user_id", user.id).maybeSingle();
     const { data: comments, error: commentsError } = await supabase.from("comments").select("id,body,created_at,user_id,profiles!comments_user_profile_fkey(display_name,username,avatar_url)").eq("outfit_id", outfitId).order("created_at", { ascending: true }).limit(50);
@@ -25,7 +32,7 @@ export async function GET(request: Request) {
     result.isLiked = Boolean(liked);
     result.comments = comments ?? [];
   }
-  if (creatorId) {
+  if (creatorId && user) {
     const { data, error } = await supabase.from("follows").select("followed_id").eq("follower_id", user.id).eq("followed_id", creatorId).maybeSingle();
     if (error) return NextResponse.json({ error: "Unable to load follow status." }, { status: 400 });
     result.isFollowing = Boolean(data);
