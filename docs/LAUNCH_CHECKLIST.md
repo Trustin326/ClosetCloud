@@ -1,7 +1,12 @@
 # ClosetCloud launch checklist
 
+## Development approach — external services deferred
+- Build and exercise independent UI flows before connecting Supabase. The Outfit Studio currently uses browser-local storage and does not require Supabase credentials.
+- Do not create or configure Supabase until the product is feature-complete enough for integrated sales-readiness testing. Before that point, keep the database schema and migrations versioned in the repository.
+- Stripe, Cloudinary, production AI and deployment credentials are also later external setup steps; do not represent them as connected until tested with real accounts.
+
 ## Before public launch
-- [ ] Create a Supabase project and run every migration in `supabase/migrations/` in filename order.
+- [ ] At sales-readiness stage, create a Supabase project and run every migration in `supabase/migrations/` in filename order.
 - [ ] Configure Supabase Auth email confirmation, redirect URLs and allowed origins.
 - [ ] Add all `.env.example` values to Vercel; keep secrets server-side.
 - [ ] Configure Cloudinary and test signed uploads from a real authenticated session.
