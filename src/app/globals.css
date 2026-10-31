@@ -119,3 +119,34 @@ a{color:inherit;text-decoration:none}
 .upcoming-list small{font-size:9px;color:#94867e}
 @media(max-width:850px){.calendar-layout{grid-template-columns:1fr}.upcoming-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.calendar-wrap{padding-top:28px}.calendar-day{min-height:58px;padding:6px}.calendar-day i{font-size:7px}.calendar-blank{min-height:58px}.calendar-grid{gap:4px}.calendar-weekday{font-size:9px}.upcoming-list{grid-template-columns:1fr}}
+
+
+.wish-wrap{max-width:1450px;margin:auto;padding:48px clamp(18px,5vw,70px) 80px}
+.wish-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0}
+.wish-stats>div{background:#fffaf6;border:1px solid #eadfd6;border-radius:13px;padding:16px 20px}
+.wish-stats strong,.wish-stats span{display:block}.wish-stats strong{font:500 27px 'Playfair Display';color:#624b44}.wish-stats span{font-size:10px;color:#92847b;margin-top:4px}
+.wish-layout{display:grid;grid-template-columns:minmax(280px,.75fr) 1.25fr;gap:18px;align-items:start}
+.wish-editor{position:sticky;top:95px}.wish-editor h2,.wish-empty h2{font:500 27px 'Playfair Display';margin:8px 0 20px}
+.wish-form{display:grid;gap:12px}.wish-form label{display:block;font-size:10px;color:#796e66}
+.wish-form input,.wish-form select,.wish-form textarea,.wish-toolbar input,.wish-toolbar select{display:block;width:100%;margin-top:6px;border:1px solid #e4d8d0;border-radius:9px;background:#fff;padding:11px;font:12px 'DM Sans',sans-serif;color:#403832;min-width:0}
+.wish-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.wish-actions{display:flex;gap:8px;flex-wrap:wrap}
+.wish-message{font-size:11px;color:#8b665d;line-height:1.6}
+.wish-toolbar{display:flex;gap:9px;margin-bottom:13px}.wish-toolbar input{flex:1;margin:0}.wish-toolbar select{width:125px;margin:0}
+.wish-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.wish-card{background:#fffaf6;border:1px solid #eadfd6;border-radius:15px;overflow:hidden;min-width:0}
+.wish-card-top{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#f1e8e1}
+.wish-card-top>span{font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:#94766c}
+.wish-status{border:1px solid #d6b9ad;border-radius:30px;background:#fffaf6;color:#94665d;padding:6px 10px;font:10px 'DM Sans',sans-serif;cursor:pointer}
+.wish-status.purchased{background:#6c514b;border-color:#6c514b;color:#fff}
+.wish-card-body{padding:15px}.wish-monogram{width:43px;height:43px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#e7d5cb,#c49b8e);color:#fff;font:500 22px 'Playfair Display';margin-bottom:13px}
+.wish-card-body>small{font-size:9px;color:#a17b70;letter-spacing:.12em;text-transform:uppercase}
+.wish-card-body h3{font-size:22px;line-height:1.2;margin:5px 0 13px;overflow-wrap:anywhere}
+.wish-prices{display:flex;justify-content:space-between;gap:8px;border-top:1px solid #eee4dc;border-bottom:1px solid #eee4dc;padding:10px 0}
+.wish-prices span{font-size:9px;color:#92847b}.wish-prices b{display:block;color:#594840;font-size:12px;margin-top:3px}
+.wish-card-body p{font-size:10px;line-height:1.6;color:#8e827a;overflow-wrap:anywhere}
+.wish-card-body>a{font-size:10px;color:#a16e65;text-decoration:underline}
+.wish-card-actions{display:flex;gap:14px;padding:10px 14px;border-top:1px solid #eee4dc}
+.wish-card-actions button{border:0;background:transparent;color:#a16e65;font:10px 'DM Sans',sans-serif;cursor:pointer;padding:4px 0}
+.wish-empty{text-align:center;padding:55px 20px}.wish-empty p{font-size:11px;color:#92847b;line-height:1.7}
+@media(max-width:900px){.wish-layout{grid-template-columns:1fr}.wish-editor{position:static}}
+@media(max-width:560px){.wish-wrap{padding-top:28px}.wish-stats{gap:7px}.wish-stats>div{padding:12px}.wish-stats strong{font-size:21px}.wish-stats span{font-size:9px}.wish-grid{grid-template-columns:1fr}.wish-two{grid-template-columns:1fr}.wish-toolbar{flex-wrap:wrap}.wish-toolbar input{flex-basis:100%}}
