@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 
 type Comment = { id: string; body: string; created_at: string; user_id: string; profiles?: { display_name?: string | null; username?: string | null; avatar_url?: string | null } | null };
 
@@ -63,7 +62,6 @@ export function SocialActions({ outfitId, creatorId }: { outfitId: string; creat
     <div className="social-action-row">
       <button className="social-button" type="button" onClick={toggleLike} disabled={loading || busy} aria-pressed={liked}>{liked ? "♥ Liked" : "♡ Like"} · {likes}</button>
       <button className="social-button" type="button" onClick={toggleFollow} disabled={loading || busy}>{following ? "Following" : "＋ Follow creator"}</button>
-      <Link className="social-button" href="/sign-in">Sign in</Link>
     </div>
     <div className="social-comments">
       <strong>Conversation</strong>
@@ -72,7 +70,7 @@ export function SocialActions({ outfitId, creatorId }: { outfitId: string; creat
         <input value={body} onChange={(event) => setBody(event.target.value)} maxLength={1000} placeholder="Add a thoughtful comment…" aria-label="Comment" />
         <button type="submit" disabled={busy || !body.trim()}>Post</button>
       </form>
-      {message && <p className="social-message" role="status">{message}</p>}
+      {message && <p className="social-message" role="status">{message} <a href="/sign-in">Sign in</a></p>}
     </div>
   </div>;
 }
