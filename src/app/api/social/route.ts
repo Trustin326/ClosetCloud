@@ -18,7 +18,7 @@ export async function GET(request: Request) {
   if (outfitId) {
     const { count: likeCount, error: countError } = await supabase.from("post_likes").select("*", { count: "exact", head: true }).eq("outfit_id", outfitId);
     const { data: liked, error: likedError } = await supabase.from("post_likes").select("outfit_id").eq("outfit_id", outfitId).eq("user_id", user.id).maybeSingle();
-    const { data: comments, error: commentsError } = await supabase.from("comments").select("id,body,created_at,user_id,profiles(display_name,username,avatar_url)").eq("outfit_id", outfitId).order("created_at", { ascending: true }).limit(50);
+    const { data: comments, error: commentsError } = await supabase.from("comments").select("id,body,created_at,user_id,profiles!comments_user_profile_fkey(display_name,username,avatar_url)").eq("outfit_id", outfitId).order("created_at", { ascending: true }).limit(50);
     if (countError || likedError || commentsError) return NextResponse.json({ error: "Unable to load social activity." }, { status: 400 });
     result.likeCount = likeCount ?? 0;
     result.isLiked = Boolean(liked);
