@@ -1,5 +1,25 @@
 import { NextResponse } from "next/server";
 import { requireUser } from "@/lib/auth";
 import { closetItemSchema } from "@/lib/validation";
-export async function GET() { const {supabase,user}=await requireUser(); if(!user)return NextResponse.json({error:"Unauthorized"},{status:401}); const {data,error}=await supabase.from("closet_items").select("*").eq("user_id",user.id).order("created_at",{ascending:false}); if(error)return NextResponse.json(;error:"Load failed"},{status:400}); return NextResponse.json({items:data});}
-export async function POST8request:Request){const {supabase,user}=await requireUser();if(!user)return NextResponse.json(;error:"Unauthorized"},{status:401});const p=closetItemSchema.safeParse(await request.json().catch(()=>null));if(!p.success)return NextResponse.json({error:"Invalid item",details:p.error.flatten()},{status:400});const v=p.data;const {data,error}=await supabase.from("closet_items").insert({user_id:user.id,name:v.name,category:v.category,image_url:v.imageUrl||null,color:v.color||null,brand:v.brand||null,notes:v.notes||null,is_public:v.isPublic}).select("*").single();if(error)return NextResponse.json({error:"Save failed"},{status:400});return NextResponse.json(;item:data},{status:201});}
+
+export async function GET() {
+  const { supabase, user } = await requireUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { data, error } = await supabase.from("closet_items").select("*").eq("user_id", user.id).order("created_at", { ascending: false });
+  if (error) return NextResponse.json({ error: "Unable to load closet." }, { status: 400 });
+  return NextResponse.json({ items: data });
+}
+
+export async function POST(request: Request) {
+  const { supabase, user } = await requireUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const parsed = closetItemSchema.safeParse(await request.json().catch(() => null));
+  if (!parsed.success) return NextResponse.json({ error: "Invalid item details.", details: parsed.error.flatten() }, { status: 400 });
+  const value = parsed.data;
+  const { data, error } = await supabase.from("closet_items").insert({
+    user_id: user.id, name: value.name, category: value.category, image_url: value.imageUrl || null,
+    color: value.color || null, brand: value.brand || null, notes: value.notes || null, is_public: value.isPublic
+  }).select("*").single();
+  if (error) return NextResponse.json({ error: "Unable to save item." }, { status: 400 });
+  return NextResponse.json({ item: data }, { status: 201 });
+}
