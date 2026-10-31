@@ -29,6 +29,12 @@ export async function GET(request: Request) {
     if (error) return NextResponse.json({ error: "Unable to load follow status." }, { status: 400 });
     result.isFollowing = Boolean(data);
   }
+  const followerCountFor = url.searchParams.get("followerCountFor");
+  if (followerCountFor) {
+    const { count, error } = await supabase.from("follows").select("*", { count: "exact", head: true }).eq("followed_id", followerCountFor);
+    if (error) return NextResponse.json({ error: "Unable to load follower count." }, { status: 400 });
+    result.followerCount = count ?? 0;
+  }
   return NextResponse.json(result);
 }
 
