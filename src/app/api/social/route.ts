@@ -10,10 +10,11 @@ const actionSchema = z.discriminatedUnion("action", [
 
 export async function GET(request: Request) {
   const { supabase, user } = await requireUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const url = new URL(request.url);
   const outfitId = url.searchParams.get("outfitId");
   const creatorId = url.searchParams.get("creatorId");
+  const followerCountFor = url.searchParams.get("followerCountFor");
+  if (!user && !followerCountFor) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const result: Record<string, unknown> = {};
   if (outfitId) {
     const { count: likeCount, error: countError } = await supabase.from("post_likes").select("*", { count: "exact", head: true }).eq("outfit_id", outfitId);
@@ -29,7 +30,6 @@ export async function GET(request: Request) {
     if (error) return NextResponse.json({ error: "Unable to load follow status." }, { status: 400 });
     result.isFollowing = Boolean(data);
   }
-  const followerCountFor = url.searchParams.get("followerCountFor");
   if (followerCountFor) {
     const { count, error } = await supabase.from("follows").select("*", { count: "exact", head: true }).eq("followed_id", followerCountFor);
     if (error) return NextResponse.json({ error: "Unable to load follower count." }, { status: 400 });
