@@ -1,7 +1,7 @@
 # ClosetCloud launch checklist
 
 ## Before public launch
-- [ ] Create Supabase project and run `supabase/migrations/0001_initial_schema.sql`.
+- [ ] Create a Supabase project and run every migration in `supabase/migrations/` in filename order.
 - [ ] Configure Supabase Auth email confirmation, redirect URLs and allowed origins.
 - [ ] Add all `.env.example` values to Vercel; keep secrets server-side.
 - [ ] Configure Cloudinary and test signed uploads from a real authenticated session.
@@ -11,13 +11,17 @@
 - [ ] Add terms, privacy notice, cookie notice if applicable, community rules, contact/support and refund policy.
 - [ ] Add image moderation, abuse reporting review process, rate limiting and operational alerts.
 - [ ] Test account creation, email confirmation, sign-in, closet CRUD, outfit CRUD, public visibility and access controls.
+- [ ] Test follow/unfollow, like/unlike, public follower counts, comment creation and comment visibility using separate test accounts.
 - [ ] Run accessibility checks, mobile browser checks, security review and end-to-end payment tests.
 - [ ] Set production domain and `NEXT_PUBLIC_SITE_URL`.
 
-## Known implementation boundaries
-- Creator subscription checkout can start, but subscription renewal/cancellation entitlement synchronization is not yet implemented.
-- One-time stylebook purchase is recorded, but a gated digital download/product fulfillment flow is not included yet.
-- Cloudinary signing endpoint returns a constrained user folder signature; client upload UI and asset ownership verification/registration are not included yet.
-- Admin moderation interface is not included; schema supports reports and admin profile flags.
-- Social schema and public discovery are present; follow/like/comment UI and APIs remain to be implemented.
-- Outfit builder currently saves selected closet item associations; visual drag-and-drop canvas is not included in this release.
+## Current implementation boundaries
+- Creator subscription checkout can start, but subscription renewal/cancellation entitlement synchronization is not implemented.
+- One-time stylebook purchase is recorded, but gated digital download/product fulfillment is not implemented.
+- Cloudinary signing endpoint exists; a complete client upload flow and asset ownership verification/registration are not included.
+- Admin moderation interface and report-review workflow are not included; the database has reports and admin profile flags.
+- Discovery now includes follow/unfollow, like/unlike and comment interactions. These require Supabase migrations and authenticated test accounts to verify end-to-end.
+- Outfit builder saves selected closet item associations; a visual drag-and-drop canvas is not included.
+- Automated end-to-end tests, full production security review and live payment verification remain outstanding.
+
+Do not launch commercially until CI passes and the external services and test cases above have been verified.
