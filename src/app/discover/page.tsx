@@ -2,17 +2,25 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { SocialActions } from "@/components/social/SocialActions";
 
+export const dynamic = "force-dynamic";
+
 type PublicOutfit = {
   id: string; user_id: string; name: string; description: string | null; occasion: string | null;
   profiles: { display_name: string | null; username: string | null } | null;
 };
 
 export default async function DiscoverPage() {
-  const supabase = await createClient();
-  const { data } = await supabase.from("outfits")
-    .select("id,user_id,name,description,occasion,created_at,profiles(display_name,username)")
-    .eq("is_public", true).order("created_at", { ascending: false }).limit(30);
-  const outfits = (data || []) as unknown as PublicOutfit[];
+  let outfits: PublicOutfit[] = [];
+  const hasSupabase = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  if (hasSupabase) {
+    try {
+      const supabase = await createClient();
+      const { data } = await supabase.from("outfits")
+        .select("id,user_id,name,description,occasion,created_at,profiles(display_name,username)")
+        .eq("is_public", true).order("created_at", { ascending: false }).limit(30);
+      outfits = (data || []) as unknown as PublicOutfit[];
+    } catch { outfits = []; }
+  }
 
   return <main className="site-shell">
     <header className="nav">
