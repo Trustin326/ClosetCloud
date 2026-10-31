@@ -41,3 +41,18 @@ a{color:inherit;text-decoration:none}
 .sidebar{display:flex;flex-direction:column;gap:10px}.sidebar a{padding:12px 14px;border-radius:10px;color:#766d66;font-size:13px}.sidebar a:hover{background:#eee5dd}
 .content-card{background:#fffaf6;border:1px solid #eadfd6;border-radius:18px;padding:25px}
 @media(max-width:800px){.hero{grid-template-columns:1fr;padding-top:55px}.editorial{height:390px}.nav-links{display:none}.tiles{grid-template-columns:1fr}.app-grid{grid-template-columns:1fr}.sidebar{flex-direction:row;overflow:auto}.footer{gap:14px;flex-direction:column}}
+
+
+.social-actions{margin-top:20px;border-top:1px solid #dfd2c8;padding-top:15px}
+.social-action-row{display:flex;gap:8px;flex-wrap:wrap}
+.social-button{border:1px solid #d8c4ba;background:#fffaf6;color:#76584f;border-radius:999px;padding:9px 13px;font:500 11px 'DM Sans',sans-serif;cursor:pointer}
+.social-button:hover{background:#eadbd4}
+.social-button:disabled{opacity:.55;cursor:not-allowed}
+.social-comments{margin-top:17px;font-size:12px;color:#625a54}
+.social-comment{margin:10px 0;line-height:1.5;overflow-wrap:anywhere}
+.social-comment b{color:#332b27;margin-right:5px}
+.social-comment-form{display:flex;gap:7px;margin-top:12px}
+.social-comment-form input{min-width:0;flex:1;border:1px solid #dfd2c8;border-radius:999px;background:#fffaf6;padding:10px 13px;font:12px 'DM Sans',sans-serif}
+.social-comment-form button{border:0;border-radius:999px;background:#b77d73;color:white;padding:0 15px;font:600 11px 'DM Sans',sans-serif;cursor:pointer}
+.social-comment-form button:disabled{opacity:.5;cursor:not-allowed}
+.social-message{color:#9a554b;font-size:11px;margin-top:9px}
