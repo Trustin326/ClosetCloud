@@ -16,9 +16,11 @@ export function CreatorFollow({ creatorId }: { creatorId: string }) {
       fetch(`/api/social?followerCountFor=${encodeURIComponent(creatorId)}`, { cache: "no-store" })
     ]).then(async ([statusResponse, countResponse]) => {
       if (!statusResponse.ok) throw new Error("Sign in to follow creators.");
-      const status = await statusResponse.json();
       const count = countResponse.ok ? await countResponse.json() : { followerCount: 0 };
-      if (active) { setFollowing(Boolean(status.isFollowing)); setFollowers(count.followerCount || 0); }
+      if (active) setFollowers(count.followerCount || 0);
+      if (!statusResponse.ok) throw new Error("Sign in to follow creators.");
+      const status = await statusResponse.json();
+      if (active) setFollowing(Boolean(status.isFollowing));
     }).catch((error: Error) => { if (active) setMessage(error.message); }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, [creatorId]);
