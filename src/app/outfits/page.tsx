@@ -6,9 +6,9 @@ type Look={id:string;name:string;occasion:string;pieces:Piece[];createdAt:string
 const starter:Piece[]=[{id:"1",name:"Silk slip dress",category:"Dresses",color:"#cda9a0"},{id:"2",name:"Tailored blazer",category:"Outerwear",color:"#6b625d"},{id:"3",name:"Wide-leg trousers",category:"Bottoms",color:"#d8c9b7"},{id:"4",name:"Cashmere knit",category:"Tops",color:"#e9dfd2"},{id:"5",name:"Leather shoulder bag",category:"Bags",color:"#8a5e4d"},{id:"6",name:"Sculptural heels",category:"Shoes",color:"#b77d73"},{id:"7",name:"Gold hoops",category:"Accessories",color:"#c7a76b"},{id:"8",name:"Classic denim",category:"Bottoms",color:"#71869a"}];
 export default function OutfitsPage(){
 const [pieces,setPieces]=useState(starter),[selected,setSelected]=useState<Piece[]>([]),[looks,setLooks]=useState<Look[]>([]),[filter,setFilter]=useState("All"),[name,setName]=useState("The Sunday Edit"),[occasion,setOccasion]=useState("Everyday"),[notice,setNotice]=useState("");
-useEffect(()=>{try{const p=localStorage.getItem("cc-studio-pieces"),l=localStorage.getItem("cc-studio-looks");if(p)setPieces(JSON.parse(p));if(l)setLooks(JSON.parse(l));}catch{}},[]);
-useEffect(()=>{localStorage.setItem("cc-studio-pieces",JSON.stringify(pieces));},[pieces]);
-useEffect(()=>{localStorage.setItem("cc-studio-looks",JSON.stringify(looks));},[looks]);
+useEffect(()=>{try{const p=localStorage.getItem("cc-studio-pieces"),l=localStorage.getItem("cc-studio-looks");if(p)setPieces(JSON.parse(p));if(l)setLooks(JSON.parse(l));}catch{}finally{setReady(true);}},[]);
+useEffect(()=>{if(ready)localStorage.setItem("cc-studio-pieces",JSON.stringify(pieces));},[pieces,ready]);
+useEffect(()=>{if(ready)localStorage.setItem("cc-studio-looks",JSON.stringify(looks));},[looks,ready]);
 const categories=["All",...Array.from(new Set(pieces.map(p=>p.category)))];
 const add=(p:Piece)=>{setSelected(s=>s.some(x=>x.id===p.id)?s:[...s,p]);setNotice("");};
 const save=()=>{if(!name.trim()||!selected.length){setNotice("Name your look and add at least one piece.");return;}setLooks(s=>[{id:crypto.randomUUID(),name:name.trim(),occasion,pieces:selected,createdAt:new Date().toISOString()},...s]);setNotice("Look saved on this device.");};
