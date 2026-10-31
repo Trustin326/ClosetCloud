@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+@import "tailwindcss";
+
+:root{--ink:#292522;--muted:#827a73;--paper:#f7f3ee;--rose:#b77d73;--line:#e9dfd6}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif}
+a{color:inherit;text-decoration:none}
+.serif{font-family:'Playfair Display',serif}
+.site-shell{min-height:100vh;background:radial-gradient(ellipse at 85% 4%,#ead8d0 0,transparent 34%),var(--paper)}
+.nav{height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,6vw,90px);border-bottom:1px solid #e9dfd6;background:#f7f3eedb;backdrop-filter:blur(16px);position:sticky;top:0;z-index:20}
+.brand{font-family:'Playfair Display',serif;font-size:25px;letter-spacing:-.8px}
+.brand span{color:var(--rose)}
+.nav-links{display:flex;gap:30px;font-size:13px;color:#625a54}
+.pill{border:1px solid #b77d73;border-radius:999px;padding:12px 20px;font-size:12px;letter-spacing:.04em;background:#b77d73;color:white;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.pill.secondary{background:transparent;color:#805d56}
+.hero{padding:88px clamp(22px,8vw,120px) 76px;display:grid;grid-template-columns:1.02fr .98fr;gap:55px;align-items:center;max-width:1500px;margin:auto}
+.eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#a16e65;font-weight:700}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(48px,6vw,82px);line-height:1.02;letter-spacing:-2.8px;font-weight:500;margin:20px 0}
+.hero p{max-width:490px;color:#776e67;line-height:1.8;font-size:15px}
+.hero-actions{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+.editorial{height:560px;position:relative;border-radius:220px 220px 22px 22px;overflow:hidden;background:linear-gradient(145deg,#d8c0b4,#f0e5db 50%,#b98f83);box-shadow:0 28px 70px #8c6d5b24}
+.editorial:before{content:"";position:absolute;width:60%;height:78%;left:20%;top:12%;border-radius:48% 48% 15% 15%;background:linear-gradient(120deg,#f5eee6,#b78e7e 45%,#6b514b);box-shadow:inset -30px 0 50px #4b302b33}
+.editorial:after{content:"CC";position:absolute;right:22px;bottom:12px;font-family:'Playfair Display';font-size:85px;color:#ffffff7a}
+.floating-note{position:absolute;bottom:35px;left:-22px;background:#fffaf5e8;padding:18px 22px;border:1px solid #fff;border-radius:14px;box-shadow:0 12px 35px #513b3018;font-size:12px}
+.section{padding:75px clamp(22px,8vw,120px);max-width:1500px;margin:auto}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:30px}
+.section h2{font:500 clamp(32px,4vw,48px)/1.1 'Playfair Display';margin:10px 0}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.tile{background:#eee5dd;border-radius:16px;padding:28px;min-height:210px;display:flex;flex-direction:column;justify-content:space-between}
+.tile:nth-child(2){background:#e8d7d1}.tile:nth-child(3){background:#e6e3dc}
+.tile small{letter-spacing:.16em;text-transform:uppercase;color:#8b7169}
+.tile h3{font:500 27px 'Playfair Display';margin:12px 0}
+.footer{padding:35px clamp(22px,8vw,120px);border-top:1px solid var(--line);color:#8b8179;font-size:12px;display:flex;justify-content:space-between}
+.auth-wrap{min-height:calc(100vh - 76px);display:grid;place-items:center;padding:40px 20px}
+.auth-card{width:min(440px,100%);background:#fffaf6;border:1px solid #eadfd6;border-radius:22px;padding:38px;box-shadow:0 20px 70px #654b3a12}
+.auth-card h1{font:500 36px 'Playfair Display';margin:10px 0}
+.field{width:100%;padding:13px 14px;border:1px solid #e5d9d0;border-radius:10px;background:#fff;font:inherit;margin:7px 0 16px}
+.label{font-size:12px;color:#756b64}
+.app-grid{display:grid;grid-template-columns:230px 1fr;gap:32px;max-width:1400px;margin:auto;padding:45px clamp(20px,5vw,70px)}
+.sidebar{display:flex;flex-direction:column;gap:10px}.sidebar a{padding:12px 14px;border-radius:10px;color:#766d66;font-size:13px}.sidebar a:hover{background:#eee5dd}
+.content-card{background:#fffaf6;border:1px solid #eadfd6;border-radius:18px;padding:25px}
+@media(max-width:800px){.hero{grid-template-columns:1fr;padding-top:55px}.editorial{height:390px}.nav-links{display:none}.tiles{grid-template-columns:1fr}.app-grid{grid-template-columns:1fr}.sidebar{flex-direction:row;overflow:auto}.footer{gap:14px;flex-direction:column}}
