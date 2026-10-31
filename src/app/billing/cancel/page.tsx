@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function Cancel(){return <main className="site-shell"><section className="auth-wrap"><div className="auth-card"><div className="eyebrow">Checkout canceled</div><h1>No worries.</h1><p style={{color:"#827a73"}}>No completed purchase was recorded for this checkout.</p><Link className="pill secondary" href="/closet">Back to your closet</Link></div></section></main>}

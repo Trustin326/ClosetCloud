@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function Success(){return <main className="site-shell"><section className="auth-wrap"><div className="auth-card"><div className="eyebrow">Checkout update</div><h1>Thank you.</h1><p style={{color:"#827a73"}}>Your payment is being confirmed. Access is granted only after our verified payment webhook records the purchase.</p><Link className="pill" href="/closet">Return to ClosetCloud</Link></div></section></main>}
