@@ -1,0 +1,38 @@
+"use client";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+
+type Wish = { id:string; name:string; brand:string; category:string; price:string; target:string; url:string; notes:string; status:"want"|"purchased"; createdAt:string };
+const KEY="cc-wishlist-v1";
+const categories=["Clothing","Shoes","Bags","Accessories","Beauty","Jewelry","Other"];
+const money=(v:string)=>v.trim()===""?"—":new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(Number(v));
+export default function WishlistPage(){
+ const [items,setItems]=useState<Wish[]>([]);
+ const [ready,setReady]=useState(false);
+ const [editing,setEditing]=useState<string|null>(null);
+ const [filter,setFilter]=useState("All");
+ const [query,setQuery]=useState("");
+ const [message,setMessage]=useState("");
+ const empty:Omit<Wish,"id"|"createdAt">={name:"",brand:"",category:"Clothing",price:"",target:"",url:"",notes:"",status:"want"};
+ const [form,setForm]=useState(empty);
+ useEffect(()=>{try{const raw=localStorage.getItem(KEY);if(raw){const parsed=JSON.parse(raw);if(Array.isArray(parsed))setItems(parsed);}}catch{setMessage("Saved wishlist data could not be read. Existing browser data was left untouched.");}finally{setReady(true);}},[]);
+ useEffect(()=>{if(ready){try{localStorage.setItem(KEY,JSON.stringify(items));}catch{setMessage("Your browser storage is full. Remove some saved entries before adding more.");}}},[items,ready]);
+ const visible=useMemo(()=>items.filter(x=>(filter==="All"||(filter==="Purchased"?x.status==="purchased":x.status==="want"))&&[x.name,x.brand,x.category,x.notes].join(" ").toLowerCase().includes(query.toLowerCase())).sort((a,b)=>b.createdAt.localeCompare(a.createdAt)),[items,filter,query]);
+ const totalTarget=items.filter(x=>x.status==="want"&&x.target).reduce((s,x)=>s+Number(x.target),0);
+ const wanted=items.filter(x=>x.status==="want").length;
+ function reset(){setForm(empty);setEditing(null);}
+ function save(e:React.FormEvent){e.preventDefault();if(!form.name.trim()){setMessage("Add an item name first.");return;}if(form.url.trim()){try{const u=new URL(form.url);if(!["http:","https:"].includes(u.protocol))throw new Error();}catch{setMessage("Enter a valid link beginning with https:// or http://.");return;}}
+ if(editing){setItems(old=>old.map(x=>x.id===editing?{...x,...form,name:form.name.trim()}:x));setMessage("Wishlist item updated.");}
+ else{setItems(old=>[{...form,id:crypto.randomUUID(),createdAt:new Date().toISOString(),name:form.name.trim()},...old]);setMessage("Added to your wishlist.");}
+ reset();}
+ function edit(x:Wish){setEditing(x.id);setForm({name:x.name,brand:x.brand,category:x.category,price:x.price,target:x.target,url:x.url,notes:x.notes,status:x.status});setMessage("");window.scrollTo({top:0,behavior:"smooth"});}
+ function remove(id:string){setItems(old=>old.filter(x=>x.id!==id));setMessage("Wishlist item removed.");}
+ function toggle(x:Wish){setItems(old=>old.map(i=>i.id===x.id?{...i,status:i.status==="want"?"purchased":"want"}:i));}
+ return <main className="site-shell"><header className="nav"><Link className="brand" href="/">closet<span>cloud</span>™</Link><nav className="nav-links"><Link href="/discover">Discover</Link><Link href="/closet">My Closet</Link><Link href="/outfits">Outfit Studio</Link><Link href="/calendar">Calendar</Link><Link href="/creators">Creators</Link></nav><span className="studio-local-tag">THE WISH LIST</span></header>
+ <div className="wish-wrap"><div className="studio-heading"><div><div className="eyebrow">Thoughtful finds, beautifully kept</div><h1 className="serif">The wish list.</h1><p>Keep the pieces you love in one place. Track prices, save shopping links, and decide what’s worth bringing home.</p></div><Link className="pill secondary" href="/closet">Explore my closet</Link></div>
+ <div className="wish-stats"><div><strong>{items.length}</strong><span>Saved finds</span></div><div><strong>{wanted}</strong><span>On your list</span></div><div><strong>{money(String(totalTarget))}</strong><span>Combined target budget</span></div></div>
+ <div className="wish-layout"><section className="content-card wish-editor"><div className="eyebrow">{editing?"Refine your saved find":"Save something lovely"}</div><h2 className="serif">{editing?"Edit wishlist item":"Add to your wishlist"}</h2><form className="wish-form" onSubmit={save}><label>Item name *<input required maxLength={90} value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="e.g. The everyday leather tote"/></label><div className="wish-two"><label>Brand<input maxLength={60} value={form.brand} onChange={e=>setForm({...form,brand:e.target.value})} placeholder="Designer or store"/></label><label>Category<select value={form.category} onChange={e=>setForm({...form,category:e.target.value})}>{categories.map(c=><option key={c}>{c}</option>)}</select></label></div><div className="wish-two"><label>Current price ($)<input type="number" min="0" step="0.01" value={form.price} onChange={e=>setForm({...form,price:e.target.value})} placeholder="0.00"/></label><label>Target price ($)<input type="number" min="0" step="0.01" value={form.target} onChange={e=>setForm({...form,target:e.target.value})} placeholder="Your ideal price"/></label></div><label>Shopping link<input type="url" maxLength={500} value={form.url} onChange={e=>setForm({...form,url:e.target.value})} placeholder="https://…"/></label><label>Notes<textarea rows={3} maxLength={400} value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})} placeholder="Color, size, occasion, sale watch…"/></label><div className="wish-actions"><button className="pill" type="submit">{editing?"Save changes":"＋ Save this find"}</button>{editing&&<button className="pill secondary" type="button" onClick={reset}>Cancel</button>}</div></form>{message&&<p className="wish-message" role="status">{message}</p>}</section>
+ <section className="wish-results"><div className="wish-toolbar"><input aria-label="Search wishlist" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search saved finds…"/><select aria-label="Filter wishlist" value={filter} onChange={e=>setFilter(e.target.value)}><option>All</option><option>Want</option><option>Purchased</option></select></div>
+ {!visible.length?<div className="content-card wish-empty"><div className="eyebrow">A curated collection</div><h2 className="serif">{items.length?"No matches found.":"Your next favorite starts here."}</h2><p>{items.length?"Try another search or filter.":"Save pieces you’re considering and keep their details close at hand."}</p></div>:<div className="wish-grid">{visible.map(x=><article className="wish-card" key={x.id}><div className="wish-card-top"><span>{x.category}</span><button onClick={()=>toggle(x)} className={x.status==="purchased"?"wish-status purchased":"wish-status"}>{x.status==="purchased"?"Purchased":"Want"}</button></div><div className="wish-card-body"><div className="wish-monogram">{x.name.slice(0,1).toUpperCase()}</div><small>{x.brand||"Saved find"}</small><h3 className="serif">{x.name}</h3><div className="wish-prices"><span>Current <b>{money(x.price)}</b></span><span>Target <b>{money(x.target)}</b></span></div>{x.notes&&<p>{x.notes}</p>}{x.url&&<a href={x.url} target="_blank" rel="noopener noreferrer">Visit item ↗</a>}</div><div className="wish-card-actions"><button onClick={()=>edit(x)}>Edit details</button><button onClick={()=>remove(x.id)}>Remove</button></div></article>)}</div>}</section></div>
+ <p className="local-note">Wishlist data is saved in this browser on this device. It is not synced to your account or backed up online. Shopping links open the retailer’s website; ClosetCloud does not process purchases.</p></div></main>;
+}
